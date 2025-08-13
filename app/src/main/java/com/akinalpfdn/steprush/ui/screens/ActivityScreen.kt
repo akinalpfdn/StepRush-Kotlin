@@ -34,7 +34,7 @@ fun ActivityScreen() {
             .fillMaxSize()
             .background(Color(0xFFECECEC))
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         
         item {
@@ -44,7 +44,6 @@ fun ActivityScreen() {
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF92400E),
-                modifier = Modifier.padding(top = 16.dp)
             )
         }
         
@@ -57,7 +56,7 @@ fun ActivityScreen() {
                 colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp)
+                    modifier = Modifier.padding(6.dp)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -201,7 +200,6 @@ fun ActivityScreen() {
 private fun formatNumber(number: Int): String {
     return when {
         number >= 1000000 -> "${number / 1000000}.${(number % 1000000) / 100000}M"
-        number >= 1000 -> "${number / 1000}.${(number % 1000) / 100}K"
         else -> number.toString()
     }
 }
