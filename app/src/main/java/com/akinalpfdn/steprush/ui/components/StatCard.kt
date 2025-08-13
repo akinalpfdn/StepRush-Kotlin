@@ -23,36 +23,39 @@ fun StatCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.aspectRatio(1f),
-        shape = RoundedCornerShape(12.dp),
+        modifier = modifier
+            .aspectRatio(1.2f) // Daha kare şekilli
+            .height(120.dp), // Sabit yükseklik
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp),
+                .padding(8.dp), // Daha az padding
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = emoji,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(bottom = 8.dp)
+                fontSize = 24.sp, // Büyük emoji
+                modifier = Modifier.padding(bottom = 4.dp)
             )
             
             Text(
                 text = title,
-                fontSize = 10.sp,
+                fontSize = 12.sp, // Büyük title
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 8.dp),
-                lineHeight = 12.sp
+                modifier = Modifier.padding(bottom = 6.dp),
+                lineHeight = 14.sp
             )
             
             Text(
                 text = value,
-                fontSize = 24.sp,
+                fontSize = 28.sp, // Büyük değer
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 textAlign = TextAlign.Center

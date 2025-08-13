@@ -36,29 +36,6 @@ fun ActivityScreen() {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item {
-            // Test Samsung Health Button
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
-            ) {
-                Button(
-                    onClick = { 
-                        // TODO: Test Samsung Health integration
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                ) {
-                    Text(
-                        text = "Test Samsung Health",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }
         
         item {
             // Header Stats
@@ -75,11 +52,12 @@ fun ActivityScreen() {
             // Rank Info
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(16.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(20.dp)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -87,29 +65,30 @@ fun ActivityScreen() {
                     ) {
                         Text(
                             text = "🏆",
-                            fontSize = 24.sp,
-                            modifier = Modifier.padding(end = 8.dp)
+                            fontSize = 32.sp,
+                            modifier = Modifier.padding(end = 12.dp)
                         )
-                        Text(
-                            text = rankName,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF92400E)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "($rating)",
-                            fontSize = 16.sp,
-                            color = Color(0xFF059669),
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        Column {
+                            Text(
+                                text = rankName,
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF92400E)
+                            )
+                            Text(
+                                text = "($rating)",
+                                fontSize = 18.sp,
+                                color = Color(0xFF059669),
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
                     }
                     
                     Text(
                         text = "Bir sonraki seviye için ${3000 - rating} Rating daha!",
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         color = Color(0xFF78716C),
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier.padding(top = 12.dp)
                     )
                 }
             }
@@ -174,7 +153,7 @@ fun ActivityScreen() {
             
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 StatCard(
                     emoji = "🔥",
@@ -193,11 +172,11 @@ fun ActivityScreen() {
                 )
             }
             
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 StatCard(
                     emoji = "🏆",
