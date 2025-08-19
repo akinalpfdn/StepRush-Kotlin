@@ -25,6 +25,7 @@ import com.akinalpfdn.steprush.data.HealthConnectManager
 import com.akinalpfdn.steprush.ui.components.CircularProgressBar
 import com.akinalpfdn.steprush.ui.components.StatCard
 import com.akinalpfdn.steprush.viewmodel.ActivityViewModel
+import java.text.DecimalFormat
 
 @Composable
 fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
@@ -105,12 +106,16 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
         
         item {
             // Header Stats
-            Text(
-                text = "Total Steps: ${formatNumber(stepData.totalSteps)}",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF92400E),
-            )
+            Column {
+                Text(
+                    text = "Toplam Adım : ${formatNumber(stepData.totalSteps)}",
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF92400E),
+                )
+                
+
+            }
         }
         
         item {
@@ -162,7 +167,9 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
         item {
             // Circular Progress with Refresh Button
             Box(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
             ) {
                 // Progress bar centered
                 Box(
@@ -393,6 +400,7 @@ private fun PermissionRequestScreen(
 private fun formatNumber(number: Int): String {
     return when {
         number >= 1000000 -> "${number / 1000000}.${(number % 1000000) / 100000}M"
-        else -> number.toString()
+        else -> DecimalFormat("#,###")
+            .format(number)
     }
 }

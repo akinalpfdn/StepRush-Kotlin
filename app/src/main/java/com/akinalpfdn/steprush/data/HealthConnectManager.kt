@@ -1,6 +1,7 @@
 package com.akinalpfdn.steprush.data
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.permission.HealthPermission
@@ -17,6 +18,7 @@ import java.time.temporal.ChronoUnit
 class HealthConnectManager(private val context: Context) {
     
     private val healthConnectClient by lazy { HealthConnectClient.getOrCreate(context) }
+    private val prefs: SharedPreferences = context.getSharedPreferences("step_rush_prefs", Context.MODE_PRIVATE)
     
     val permissions = setOf(
         HealthPermission.getReadPermission(StepsRecord::class)
@@ -134,24 +136,57 @@ class HealthConnectManager(private val context: Context) {
     
     suspend fun getTotalSteps(): Int {
         return try {
-            val thirtyDaysAgo = LocalDateTime.now().minusDays(30)
-            val now = LocalDateTime.now()
+            val currentTotalSteps = prefs.getInt("total_steps", 0)
+            val lastDailySteps = prefs.getInt("last_daily_steps", 0)
+            val todaySteps = getTodaySteps()
             
-            val response = healthConnectClient.readRecords(
-                ReadRecordsRequest(
-                    recordType = StepsRecord::class,
-                    timeRangeFilter = TimeRangeFilter.between(
-                        thirtyDaysAgo.atZone(ZoneId.systemDefault()).toInstant(),
-                        now.atZone(ZoneId.systemDefault()).toInstant()
-                    )
-                )
-            )
+            // Eğer bugünkü adımlar önceki kayıtlı günlük adımlardan farklıysa güncelle
+            if (todaySteps != lastDailySteps) {
+                val difference = todaySteps - lastDailySteps
+                val newTotal = currentTotalSteps + difference
+                
+                // Negatif değer kontrolü (gece yarısı reset durumu)
+                val finalTotal = if (difference < 0) {
+                    // Büyük ihtimalle yeni gün başladı, sadece bugünkü adımları ekle
+                    currentTotalSteps + todaySteps
+                } else {
+                    newTotal
+                }
+                
+                // SharedPreferences'a kaydet
+                prefs.edit()
+                    .putInt("total_steps", finalTotal)
+                    .putInt("last_daily_steps", todaySteps)
+                    .putString("last_update_date", LocalDateTime.now().toLocalDate().toString())
+                    .apply()
+                
+                Log.d("StepTracking", "Total steps updated: $finalTotal (difference: $difference)")
+                return finalTotal
+            }
             
-            response.records.sumOf { it.count.toInt() }
+            currentTotalSteps
         } catch (e: Exception) {
             Log.e("HealthConnect", "Toplam adım çekme hatası: ${e.message}")
-            0
+            prefs.getInt("total_steps", 0)
         }
+    }
+    
+    // İlk kurulum için toplam adım sıfırlama fonksiyonu
+    fun resetTotalSteps() {
+        prefs.edit()
+            .putInt("total_steps", 0)
+            .putInt("last_daily_steps", 0)
+            .remove("last_update_date")
+            .apply()
+        Log.d("StepTracking", "Total steps reset to 0")
+    }
+    
+    // Debug için toplam adım bilgilerini göster
+    fun getTotalStepsInfo(): String {
+        val totalSteps = prefs.getInt("total_steps", 0)
+        val lastDaily = prefs.getInt("last_daily_steps", 0)
+        val lastUpdate = prefs.getString("last_update_date", "Never")
+        return "Total: $totalSteps, Last Daily: $lastDaily, Last Update: $lastUpdate"
     }
     
     fun getStepsFlow(): Flow<StepData> = flow {

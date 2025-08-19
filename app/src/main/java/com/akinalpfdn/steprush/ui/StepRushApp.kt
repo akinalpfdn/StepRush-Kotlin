@@ -26,23 +26,40 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.akinalpfdn.steprush.ui.screens.ActivityScreen
 import com.akinalpfdn.steprush.ui.screens.RacesScreen
+import com.akinalpfdn.steprush.ui.theme.StepRushTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StepRushApp() {
     val navController = rememberNavController()
     
-    Scaffold(
+    StepRushTheme(
+        darkTheme = false, // Force light theme
+        dynamicColor = false // Disable dynamic colors for consistent theme
+    ) {
+        Scaffold(
         bottomBar = {
-            NavigationBar(
-                containerColor = Color(0xFFF5F5F5),
-                modifier = Modifier.height(68.dp)
+            Box(
+                modifier = Modifier
+                    .height(72.dp)
+                    .fillMaxSize()
             ) {
+                NavigationBar(
+                    containerColor = Color(0xFFF5F5F5),
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
                 
                 NavigationBarItem(
-                    icon = { Icon(Icons.Filled.DirectionsRun, contentDescription = "Activity") },
+                    icon = { 
+                        Box(
+                            modifier = Modifier.padding(top = 14.dp)
+                        ) {
+                            Icon(Icons.Filled.DirectionsRun, contentDescription = "Activity")
+                        }
+                    },
                     label = { 
                         Text(
                             text = "Activity", 
@@ -70,7 +87,13 @@ fun StepRushApp() {
                 )
                 
                 NavigationBarItem(
-                    icon = { Icon(Icons.Filled.EmojiEvents, contentDescription = "Races") },
+                    icon = { 
+                        Box(
+                            modifier = Modifier.padding(top = 14.dp)
+                        ) {
+                            Icon(Icons.Filled.EmojiEvents, contentDescription = "Races")
+                        }
+                    },
                     label = { 
                         Text(
                             text = "Races", 
@@ -96,6 +119,7 @@ fun StepRushApp() {
                         indicatorColor = Color(0xFFBB6653).copy(alpha = 0.1f)
                     )
                 )
+            }
             }
         }
     ) { innerPadding ->
@@ -161,5 +185,6 @@ fun StepRushApp() {
                 }
             }
         }
+    }
     }
 }
