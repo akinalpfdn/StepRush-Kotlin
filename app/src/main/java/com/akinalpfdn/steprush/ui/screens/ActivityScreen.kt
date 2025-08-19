@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -103,22 +105,12 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
         
         item {
             // Header Stats
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Total Steps: ${formatNumber(stepData.totalSteps)}",
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF92400E),
-                )
-                
-                IconButton(onClick = { viewModel.refreshData() }) {
-                    Text("🔄", fontSize = 20.sp)
-                }
-            }
+            Text(
+                text = "Total Steps: ${formatNumber(stepData.totalSteps)}",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF92400E),
+            )
         }
         
         item {
@@ -168,40 +160,60 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
         }
         
         item {
-            // Circular Progress
+            // Circular Progress with Refresh Button
             Box(
-                contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                CircularProgressBar(
-                    progress = progressPercentage / 100f,
-                    size = 180.dp,
-                    strokeWidth = 10.dp,
-                    progressColor = Color(0xFFf3770a),
-                    backgroundColor = Color(0xFFf5f1eb)
-                )
-                
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                // Progress bar centered
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        text = formatNumber(stepData.todaySteps),
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF92400E)
+                    CircularProgressBar(
+                        progress = progressPercentage / 100f,
+                        size = 180.dp,
+                        strokeWidth = 10.dp,
+                        progressColor = Color(0xFFf3770a),
+                        backgroundColor = Color(0xFFf5f1eb)
                     )
-                    Text(
-                        text = "/ ${formatNumber(dailyGoal)} steps",
-                        fontSize = 14.sp,
-                        color = Color(0xFF78716C),
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = "${progressPercentage.toInt()}%",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF059669),
-                        modifier = Modifier.padding(top = 8.dp)
+                    
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = formatNumber(stepData.todaySteps),
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF92400E)
+                        )
+                        Text(
+                            text = "/ ${formatNumber(dailyGoal)} steps",
+                            fontSize = 14.sp,
+                            color = Color(0xFF78716C),
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = "${progressPercentage.toInt()}%",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF059669),
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                }
+                
+                // Refresh button positioned to the right
+                IconButton(
+                    onClick = { viewModel.refreshData() },
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(end = 16.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Yenile",
+                        tint = Color(0xFFf3770a),
+                        modifier = Modifier.size(38.dp)
                     )
                 }
             }

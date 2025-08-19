@@ -40,7 +40,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
     packaging {
         resources {
@@ -70,7 +70,7 @@ dependencies {
     implementation("androidx.health.connect:connect-client:1.1.0-alpha08")
     
     // Icons
-    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+    implementation("androidx.compose.material:material-icons-extended")
     
     // Charts (for step visualization)
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
