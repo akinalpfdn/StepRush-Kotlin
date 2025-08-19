@@ -67,13 +67,16 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     
     // Health Connect
-    implementation("androidx.health.connect:connect-client:1.1.0-alpha07")
+    implementation("androidx.health.connect:connect-client:1.1.0-alpha08")
     
     // Icons
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
     
     // Charts (for step visualization)
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    
+    // WorkManager for background tasks
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
     
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

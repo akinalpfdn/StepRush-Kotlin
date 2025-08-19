@@ -1,5 +1,7 @@
+
 package com.akinalpfdn.steprush.ui.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,25 +11,87 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.health.connect.client.HealthConnectClient
+import androidx.health.connect.client.PermissionController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.akinalpfdn.steprush.data.HealthConnectManager
 import com.akinalpfdn.steprush.ui.components.CircularProgressBar
 import com.akinalpfdn.steprush.ui.components.StatCard
+import com.akinalpfdn.steprush.viewmodel.ActivityViewModel
 
 @Composable
-fun ActivityScreen() {
-    // Mock data - will be replaced with real Health Connect data
-    val totalSteps = 287543
-    val dailySteps = 8247
+fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
+    val context = LocalContext.current
+    val stepData by viewModel.stepData.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val hasPermissions by viewModel.hasPermissions.collectAsState()
+    
+    val healthConnectManager = remember { HealthConnectManager(context) }
+    
+    var healthConnectAvailable by remember { mutableStateOf<Boolean?>(null) }
+    
+    // Health Connect availability check
+    LaunchedEffect(Unit) {
+        healthConnectAvailable = healthConnectManager.isHealthConnectAvailable()
+    }
+    
+    // Activity Result Contract for permissions
+    val requestPermissionActivityContract = remember { 
+        PermissionController.createRequestPermissionResultContract() 
+    }
+    
+    val requestPermissions = rememberLauncherForActivityResult(
+        contract = requestPermissionActivityContract
+    ) { granted ->
+        if (granted.containsAll(healthConnectManager.permissions)) {
+            viewModel.onPermissionsGranted()
+        } else {
+            viewModel.onPermissionsDenied()
+        }
+    }
+    
+    // Activity'e geri döndüğünde izinleri tekrar kontrol et
+    LaunchedEffect(Unit) {
+        viewModel.checkPermissionsOnResume()
+    }
+    
     val dailyGoal = 10000
-    val currentStreak = 12
-    val bestStreak = 23
+    val currentStreak = viewModel.calculateStreak(stepData.weeklySteps, dailyGoal)
+    val bestStreak = 23 // Bu değer veritabanından gelecek
     val rating = 2150
     val rankName = "Bronze Runner"
     
-    val progressPercentage = (dailySteps.toFloat() / dailyGoal.toFloat()) * 100f
+    val progressPercentage = (stepData.todaySteps.toFloat() / dailyGoal.toFloat()) * 100f
+    
+    // Health Connect kullanılamıyorsa hata mesajı göster
+    if (healthConnectAvailable == false) {
+        HealthConnectUnavailableScreen()
+        return
+    }
+    
+    if (!hasPermissions) {
+        PermissionRequestScreen(
+            onRequestPermission = { 
+                requestPermissions.launch(healthConnectManager.permissions)
+            }
+        )
+        return
+    }
+    
+    if (isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+        return
+    }
     
     LazyColumn(
         modifier = Modifier
@@ -39,12 +103,22 @@ fun ActivityScreen() {
         
         item {
             // Header Stats
-            Text(
-                text = "Total Steps: ${formatNumber(totalSteps)}",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF92400E),
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Total Steps: ${formatNumber(stepData.totalSteps)}",
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF92400E),
+                )
+                
+                IconButton(onClick = { viewModel.refreshData() }) {
+                    Text("🔄", fontSize = 20.sp)
+                }
+            }
         }
         
         item {
@@ -111,7 +185,7 @@ fun ActivityScreen() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = formatNumber(dailySteps),
+                        text = formatNumber(stepData.todaySteps),
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF92400E)
@@ -192,6 +266,113 @@ fun ActivityScreen() {
                     backgroundColor = Color(0xFF8B5CF6),
                     modifier = Modifier.weight(1f)
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun HealthConnectUnavailableScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFECECEC))
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "⚠️",
+                    fontSize = 64.sp,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                
+                Text(
+                    text = "Health Connect Kullanılamıyor",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF92400E),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+                
+                Text(
+                    text = "Bu özellik için Health Connect gereklidir. Lütfen Google Play Store'dan Health Connect uygulamasını indirin.",
+                    fontSize = 16.sp,
+                    color = Color(0xFF78716C),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PermissionRequestScreen(
+    onRequestPermission: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFECECEC))
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "🏃‍♂️",
+                    fontSize = 64.sp,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                
+                Text(
+                    text = "Adım Takibi İçin İzin",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF92400E),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+                
+                Text(
+                    text = "Uygulamanın adımlarınızı takip edebilmesi için Health Connect izni gerekiyor.",
+                    fontSize = 16.sp,
+                    color = Color(0xFF78716C),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+                
+                Button(
+                    onClick = onRequestPermission,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF92400E)
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "İzin Ver",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
             }
         }
     }
