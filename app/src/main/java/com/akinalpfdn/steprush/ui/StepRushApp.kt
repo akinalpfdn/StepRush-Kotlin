@@ -4,10 +4,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsRun
 import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,6 +35,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.akinalpfdn.steprush.ui.screens.ActivityScreen
 import com.akinalpfdn.steprush.ui.screens.RacesScreen
+import com.akinalpfdn.steprush.ui.screens.FriendsScreen
 import com.akinalpfdn.steprush.ui.theme.StepRushTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,87 +49,70 @@ fun StepRushApp() {
     ) {
         Scaffold(
         bottomBar = {
-            Box(
+            Surface(
+                color = Color(0xFFF5F5F5),
                 modifier = Modifier
-                    .height(72.dp)
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .height(64.dp)
             ) {
-                NavigationBar(
-                    containerColor = Color(0xFFF5F5F5),
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
                 
-                NavigationBarItem(
-                    icon = { 
-                        Box(
-                            modifier = Modifier.padding(top = 14.dp)
-                        ) {
-                            Icon(Icons.Filled.DirectionsRun, contentDescription = "Activity")
-                        }
-                    },
-                    label = { 
-                        Text(
-                            text = "Activity", 
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Medium
-                        ) 
-                    },
-                    selected = currentDestination?.hierarchy?.any { it.route == "activity" } == true,
-                    onClick = {
-                        navController.navigate("activity") {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal =  6.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Activity Button
+                    CustomNavButton(
+                        icon = Icons.Filled.DirectionsRun,
+                        label = "Activity",
+                        isSelected = currentDestination?.hierarchy?.any { it.route == "activity" } == true,
+                        onClick = {
+                            navController.navigate("activity") {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color(0xFFBB6653),
-                        selectedTextColor = Color(0xFFBB6653),
-                        unselectedIconColor = Color(0xFFBB6653),
-                        unselectedTextColor = Color(0xFFBB6653),
-                        indicatorColor = Color(0xFFBB6653).copy(alpha = 0.1f)
                     )
-                )
-                
-                NavigationBarItem(
-                    icon = { 
-                        Box(
-                            modifier = Modifier.padding(top = 14.dp)
-                        ) {
-                            Icon(Icons.Filled.EmojiEvents, contentDescription = "Races")
-                        }
-                    },
-                    label = { 
-                        Text(
-                            text = "Races", 
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Medium
-                        ) 
-                    },
-                    selected = currentDestination?.hierarchy?.any { it.route == "races" } == true,
-                    onClick = {
-                        navController.navigate("races") {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                    
+                    // Friends Button
+                    CustomNavButton(
+                        icon = Icons.Filled.People,
+                        label = "Friends",
+                        isSelected = currentDestination?.hierarchy?.any { it.route == "friends" } == true,
+                        onClick = {
+                            navController.navigate("friends") {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color(0xFFBB6653),
-                        selectedTextColor = Color(0xFFBB6653),
-                        unselectedIconColor = Color(0xFFBB6653),
-                        unselectedTextColor = Color(0xFFBB6653),
-                        indicatorColor = Color(0xFFBB6653).copy(alpha = 0.1f)
                     )
-                )
-            }
+                    
+                    // Races Button
+                    CustomNavButton(
+                        icon = Icons.Filled.EmojiEvents,
+                        label = "Races",
+                        isSelected = currentDestination?.hierarchy?.any { it.route == "races" } == true,
+                        onClick = {
+                            navController.navigate("races") {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+                }
             }
         }
     ) { innerPadding ->
@@ -144,8 +137,17 @@ fun StepRushApp() {
                             if (abs(totalDragOffset) > minDragDistance) {
                                 when {
                                     // Swipe right (positive totalDragOffset) - go to previous screen
-                                    totalDragOffset > 0 && currentRoute == "races" -> {
+                                    totalDragOffset > 0 && currentRoute == "friends" -> {
                                         navController.navigate("activity") {
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    }
+                                    totalDragOffset > 0 && currentRoute == "races" -> {
+                                        navController.navigate("friends") {
                                             popUpTo(navController.graph.findStartDestination().id) {
                                                 saveState = true
                                             }
@@ -155,6 +157,15 @@ fun StepRushApp() {
                                     }
                                     // Swipe left (negative totalDragOffset) - go to next screen
                                     totalDragOffset < 0 && currentRoute == "activity" -> {
+                                        navController.navigate("friends") {
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    }
+                                    totalDragOffset < 0 && currentRoute == "friends" -> {
                                         navController.navigate("races") {
                                             popUpTo(navController.graph.findStartDestination().id) {
                                                 saveState = true
@@ -180,11 +191,53 @@ fun StepRushApp() {
                 composable("activity") {
                     ActivityScreen()
                 }
+                composable("friends") {
+                    FriendsScreen()
+                }
                 composable("races") {
                     RacesScreen()
                 }
             }
         }
     }
+    }
+}
+
+@Composable
+private fun CustomNavButton(
+    icon: ImageVector,
+    label: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .clickable { onClick() }
+            .padding(vertical = 2.dp, horizontal =  6.dp)
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .background(
+                    color = if (isSelected) Color(0xFFBB6653).copy(alpha = 0.1f) else Color.Transparent,
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .padding(horizontal = 16.dp, vertical = 6.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = Color(0xFFBB6653),
+                modifier = Modifier.padding(bottom = 2.dp)
+            )
+        }
+        
+        Text(
+            text = label,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color(0xFFBB6653)
+        )
     }
 }
