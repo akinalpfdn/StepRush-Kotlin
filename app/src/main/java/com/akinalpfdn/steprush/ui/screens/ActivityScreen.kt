@@ -24,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.akinalpfdn.steprush.data.HealthConnectManager
 import com.akinalpfdn.steprush.ui.components.CircularProgressBar
 import com.akinalpfdn.steprush.ui.components.StatCard
+import com.akinalpfdn.steprush.ui.theme.*
 import com.akinalpfdn.steprush.viewmodel.ActivityViewModel
 import java.text.DecimalFormat
 
@@ -99,7 +100,7 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFECECEC))
+            .background(BackgroundLight)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
@@ -111,7 +112,7 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
                     text = "Toplam Adım : ${formatNumber(stepData.totalSteps)}",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF92400E),
+                    color = TextPrimary,
                 )
                 
 
@@ -124,7 +125,7 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(containerColor = SurfaceWhite)
             ) {
                 Column(
                     modifier = Modifier.padding(6.dp)
@@ -143,12 +144,12 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
                                 text = rankName,
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF92400E)
+                                color = TextPrimary
                             )
                             Text(
                                 text = "($rating)",
                                 fontSize = 18.sp,
-                                color = Color(0xFF059669),
+                                color = FreshGreen,
                                 fontWeight = FontWeight.SemiBold
                             )
                         }
@@ -157,7 +158,7 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
                     Text(
                         text = "Bir sonraki seviye için ${3000 - rating} Rating daha!",
                         fontSize = 16.sp,
-                        color = Color(0xFF78716C),
+                        color = TextSecondary,
                         modifier = Modifier.padding(top = 12.dp)
                     )
                 }
@@ -180,8 +181,8 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
                         progress = progressPercentage / 100f,
                         size = 180.dp,
                         strokeWidth = 10.dp,
-                        progressColor = Color(0xFFf3770a),
-                        backgroundColor = Color(0xFFf5f1eb)
+                        progressColor = WarmOrange,
+                        backgroundColor = CardBackground
                     )
                     
                     Column(
@@ -191,19 +192,19 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
                             text = formatNumber(stepData.todaySteps),
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF92400E)
+                            color = TextPrimary
                         )
                         Text(
                             text = "/ ${formatNumber(dailyGoal)} steps",
                             fontSize = 14.sp,
-                            color = Color(0xFF78716C),
+                            color = TextSecondary,
                             fontWeight = FontWeight.Medium
                         )
                         Text(
                             text = "${progressPercentage.toInt()}%",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF059669),
+                            color = FreshGreen,
                             modifier = Modifier.padding(top = 8.dp)
                         )
                     }
@@ -219,7 +220,7 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
                     Icon(
                         imageVector = Icons.Default.Refresh,
                         contentDescription = "Yenile",
-                        tint = Color(0xFFf3770a),
+                        tint = WarmOrange,
                         modifier = Modifier.size(38.dp)
                     )
                 }
@@ -232,14 +233,14 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
                 text = "Seriler",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF92400E),
+                color = TextPrimary,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             
             Text(
                 text = "Seri devam ediyor! Muhteşem gidiyorsun!",
                 fontSize = 16.sp,
-                color = Color(0xFF78716C),
+                color = TextSecondary,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
             
@@ -251,7 +252,7 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
                     emoji = "🔥",
                     title = "Mevcut Adım Serisi",
                     value = currentStreak.toString(),
-                    backgroundColor = Color(0xFFF97316),
+                    backgroundColor =  Color(0xFFF97316),
                     modifier = Modifier.weight(1f)
                 )
                 
@@ -259,7 +260,7 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
                     emoji = "⭐",
                     title = "En İyi Adım Serisi",
                     value = bestStreak.toString(),
-                    backgroundColor = Color(0xFFEAB308),
+                    backgroundColor = WarningOrange,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -274,7 +275,7 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
                     emoji = "🏆",
                     title = "Mevcut Galibiyet Serisi",
                     value = (currentStreak / 3).toString(),
-                    backgroundColor = Color(0xFF10B981),
+                    backgroundColor = FreshGreen,
                     modifier = Modifier.weight(1f)
                 )
                 
@@ -282,7 +283,7 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
                     emoji = "👑",
                     title = "En Uzun Galibiyet Serisi",
                     value = (bestStreak / 3).toString(),
-                    backgroundColor = Color(0xFF8B5CF6),
+                    backgroundColor = SkyBlue,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -295,7 +296,7 @@ private fun HealthConnectUnavailableScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFECECEC))
+            .background(BackgroundLight)
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -303,7 +304,7 @@ private fun HealthConnectUnavailableScreen() {
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = SurfaceWhite)
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
@@ -319,7 +320,7 @@ private fun HealthConnectUnavailableScreen() {
                     text = "Health Connect Kullanılamıyor",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF92400E),
+                    color = TextPrimary,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
@@ -327,7 +328,7 @@ private fun HealthConnectUnavailableScreen() {
                 Text(
                     text = "Bu özellik için Health Connect gereklidir. Lütfen Google Play Store'dan Health Connect uygulamasını indirin.",
                     fontSize = 16.sp,
-                    color = Color(0xFF78716C),
+                    color = TextSecondary,
                     textAlign = TextAlign.Center
                 )
             }
@@ -341,7 +342,7 @@ private fun PermissionRequestScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFECECEC))
+            .background(BackgroundLight)
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -349,7 +350,7 @@ private fun PermissionRequestScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = SurfaceWhite)
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
@@ -365,7 +366,7 @@ private fun PermissionRequestScreen(
                     text = "Adım Takibi İçin İzin",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF92400E),
+                    color = TextPrimary,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
@@ -373,7 +374,7 @@ private fun PermissionRequestScreen(
                 Text(
                     text = "Uygulamanın adımlarınızı takip edebilmesi için Health Connect izni gerekiyor.",
                     fontSize = 16.sp,
-                    color = Color(0xFF78716C),
+                    color = TextSecondary,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
@@ -381,7 +382,7 @@ private fun PermissionRequestScreen(
                 Button(
                     onClick = onRequestPermission,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF92400E)
+                        containerColor = SkyBlue
                     ),
                     modifier = Modifier.fillMaxWidth()
                 ) {

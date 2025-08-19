@@ -36,7 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.akinalpfdn.steprush.ui.screens.ActivityScreen
 import com.akinalpfdn.steprush.ui.screens.RacesScreen
 import com.akinalpfdn.steprush.ui.screens.FriendsScreen
-import com.akinalpfdn.steprush.ui.theme.StepRushTheme
+import com.akinalpfdn.steprush.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +50,7 @@ fun StepRushApp() {
         Scaffold(
         bottomBar = {
             Surface(
-                color = Color(0xFFF5F5F5),
+                color = SurfaceWhite,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp)
@@ -220,7 +220,7 @@ private fun CustomNavButton(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .background(
-                    color = if (isSelected) Color(0xFFBB6653).copy(alpha = 0.1f) else Color.Transparent,
+                    color = if (isSelected) SkyBlue.copy(alpha = 0.2f) else Color.Transparent,
                     shape = RoundedCornerShape(20.dp)
                 )
                 .padding(horizontal = 16.dp, vertical = 6.dp)
@@ -228,7 +228,7 @@ private fun CustomNavButton(
             Icon(
                 imageVector = icon,
                 contentDescription = label,
-                tint = Color(0xFFBB6653),
+                tint = if (isSelected) SkyBlue else TextSecondary,
                 modifier = Modifier.padding(bottom = 2.dp)
             )
         }
@@ -237,7 +237,7 @@ private fun CustomNavButton(
             text = label,
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,
-            color = Color(0xFFBB6653)
+            color = if (isSelected) SkyBlue else TextSecondary
         )
     }
 }

@@ -11,26 +11,47 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
+// 🌙 Dark theme (gelecekte kullanılabilir)
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = SkyBlue,
+    secondary = FreshGreen,
+    tertiary = WarmOrange,
+    background = TextPrimary,
+    surface = TextSecondary,
+    onPrimary = SurfaceWhite,
+    onSecondary = SurfaceWhite,
+    onTertiary = TextPrimary,
+    onBackground = SurfaceWhite,
+    onSurface = SurfaceWhite
 )
 
+// ☀️ Light theme - Ana tema (Neomorphic tasarım için optimize)
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    // Ana renkler
+    primary = SkyBlue,           // Ana mavi - butonlar ve vurgular için
+    secondary = FreshGreen,      // İkincil yeşil - success ve progress için
+    tertiary = WarmOrange,       // Üçüncül turuncu - accent ve CTA'lar için
+    
+    // Arka plan ve yüzey renkleri
+    background = BackgroundLight,    // Ultra açık mavimsi arka plan
+    surface = SurfaceWhite,          // Kart ve yüzey rengi
+    surfaceVariant = CardBackground, // Kart arka planı
+    
+    // Text renkleri (on: üzerindeki text rengi)
+    onPrimary = SurfaceWhite,        // Ana renk üzerindeki text (beyaz)
+    onSecondary = SurfaceWhite,      // İkincil renk üzerindeki text (beyaz)
+    onTertiary = SurfaceWhite,       // Üçüncül renk üzerindeki text (beyaz)
+    onBackground = TextPrimary,      // Arka plan üzerindeki text (koyu)
+    onSurface = TextPrimary,         // Yüzey üzerindeki text (koyu)
+    onSurfaceVariant = TextSecondary, // İkincil yüzey text (orta ton)
+    
+    // Durum renkleri
+    error = ErrorRed,                // Hata rengi
+    onError = SurfaceWhite,          // Hata rengi üzerindeki text
+    
+    // Border ve outline
+    outline = TextLight,             // Çerçeve rengi (açık gri)
+    outlineVariant = LightShadow     // İkincil çerçeve (çok açık)
 )
 
 @Composable

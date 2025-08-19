@@ -16,13 +16,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.akinalpfdn.steprush.ui.theme.*
 
 @Composable
 fun FriendsScreen() {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFECECEC))
+            .background(BackgroundLight)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -38,7 +39,7 @@ fun FriendsScreen() {
                     text = "Arkadaşlar",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF92400E),
+                    color = TextPrimary,
                 )
                 
                 IconButton(
@@ -47,7 +48,7 @@ fun FriendsScreen() {
                     Icon(
                         imageVector = Icons.Default.PersonAdd,
                         contentDescription = "Arkadaş Ekle",
-                        tint = Color(0xFFf3770a),
+                        tint = WarmOrange,
                         modifier = Modifier.size(28.dp)
                     )
                 }
@@ -60,7 +61,7 @@ fun FriendsScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(containerColor = SurfaceWhite)
             ) {
                 Column(
                     modifier = Modifier.padding(20.dp),
@@ -77,14 +78,14 @@ fun FriendsScreen() {
                         text = "Arkadaş Listesi",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF92400E),
+                        color = TextPrimary,
                         modifier = Modifier.padding(top = 8.dp)
                     )
                     
                     Text(
                         text = "Arkadaşlarınla birlikte adım sayısı yarışına katıl!",
                         fontSize = 14.sp,
-                        color = Color(0xFF78716C),
+                        color = TextSecondary,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(top = 4.dp)
                     )
@@ -119,7 +120,7 @@ fun FriendsScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFf3770a).copy(alpha = 0.1f))
+                colors = CardDefaults.cardColors(containerColor = WarmOrange.copy(alpha = 0.1f))
             ) {
                 Column(
                     modifier = Modifier
@@ -143,7 +144,7 @@ fun FriendsScreen() {
                     Text(
                         text = "Arkadaşlarınla birlikte daha motive ol!",
                         fontSize = 14.sp,
-                        color = Color(0xFF78716C),
+                        color = TextSecondary,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(top = 4.dp)
                     )
@@ -151,7 +152,7 @@ fun FriendsScreen() {
                     Button(
                         onClick = { /* TODO: Invite friends */ },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF92400E)
+                            containerColor = SkyBlue
                         ),
                         modifier = Modifier.padding(top = 12.dp)
                     ) {
@@ -205,7 +206,7 @@ private fun FriendCard(
                             modifier = Modifier
                                 .size(12.dp)
                                 .background(
-                                    Color(0xFF10B981),
+                                    FreshGreen,
                                     shape = RoundedCornerShape(6.dp)
                                 )
                                 .align(Alignment.BottomEnd)
@@ -226,7 +227,7 @@ private fun FriendCard(
                     Text(
                         text = if (isOnline) "Çevrimiçi" else "Çevrimdışı",
                         fontSize = 12.sp,
-                        color = if (isOnline) Color(0xFF10B981) else Color(0xFF78716C)
+                        color = if (isOnline) FreshGreen else TextSecondary
                     )
                 }
             }
