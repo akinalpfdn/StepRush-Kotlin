@@ -170,7 +170,8 @@ fun ActivityScreen(viewModel: ActivityViewModel = viewModel()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp)
+                    .padding(top = 26.dp, bottom = 26.dp)
+
             ) {
                 // Progress bar centered
                 Box(

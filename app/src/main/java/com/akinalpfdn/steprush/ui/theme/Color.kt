@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.Color
 // 🎨 Ana Renkler (Primary Colors)
 val SkyBlue = Color(0xFF4A90E2)      // Canlı gökyüzü mavisi - güven ve enerji
 val FreshGreen = Color(0xFF7ED321)   // Taze yeşil - doğa ve canlılık
-val WarmOrange = Color(0xFFF5A623)   // Sıcak turuncu - motivasyon ve enerji
+val WarmOrange = Color(0xFFf3770a)   // Sıcak turuncu - motivasyon ve enerji
 
 // 🎨 Arka Plan & Yüzey Renkleri
 val BackgroundLight = Color(0xFFF8FAFE)  // Ultra açık mavimsi beyaz

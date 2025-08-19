@@ -16,7 +16,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.Canvas
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.Path
+import androidx.compose.foundation.shape.CircleShape
 import com.akinalpfdn.steprush.ui.theme.*
+import java.text.DecimalFormat
 
 @Composable
 fun FriendsScreen() {
@@ -42,56 +49,48 @@ fun FriendsScreen() {
                     color = TextPrimary,
                 )
                 
-                IconButton(
-                    onClick = { /* TODO: Add friend functionality */ }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.PersonAdd,
-                        contentDescription = "Arkadaş Ekle",
-                        tint = WarmOrange,
-                        modifier = Modifier.size(28.dp)
+                // Enhanced Add Friend Button
+                Card(
+                    modifier = Modifier.size(48.dp),
+                    shape = CircleShape,
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.Transparent
                     )
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(
+                                        WarmOrange,
+                                        WarmOrange.copy(alpha = 0.8f)
+                                    ),
+                                    start = Offset(0f, 0f),
+                                    end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
+                                ),
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        IconButton(
+                            onClick = { /* TODO: Add friend functionality */ },
+                            modifier = Modifier.size(48.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.PersonAdd,
+                                contentDescription = "Arkadaş Ekle",
+                                tint = SurfaceWhite,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    }
                 }
             }
         }
         
-        item {
-            // Friends List Header
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceWhite)
-            ) {
-                Column(
-                    modifier = Modifier.padding(20.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Friends",
-                        tint = Color(0xFF92400E),
-                        modifier = Modifier.size(48.dp)
-                    )
-                    
-                    Text(
-                        text = "Arkadaş Listesi",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextPrimary,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                    
-                    Text(
-                        text = "Arkadaşlarınla birlikte adım sayısı yarışına katıl!",
-                        fontSize = 14.sp,
-                        color = TextSecondary,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
-            }
-        }
+
         
         // Sample friends (mockup data)
         items(5) { index ->
@@ -109,8 +108,7 @@ fun FriendsScreen() {
                     2 -> 15200
                     3 -> 6700
                     else -> 9800
-                },
-                isOnline = index % 2 == 0
+                }
             )
         }
         
@@ -119,8 +117,6 @@ fun FriendsScreen() {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors = CardDefaults.cardColors(containerColor = WarmOrange.copy(alpha = 0.1f))
             ) {
                 Column(
                     modifier = Modifier
@@ -173,19 +169,18 @@ fun FriendsScreen() {
 @Composable
 private fun FriendCard(
     name: String,
-    todaySteps: Int,
-    isOnline: Boolean
+    todaySteps: Int
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(containerColor = SurfaceWhite)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding( 6.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -193,42 +188,44 @@ private fun FriendCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = name,
-                        tint = Color(0xFF92400E),
-                        modifier = Modifier.size(40.dp)
-                    )
-                    
-                    // Online indicator
-                    if (isOnline) {
-                        Box(
-                            modifier = Modifier
-                                .size(12.dp)
-                                .background(
-                                    FreshGreen,
-                                    shape = RoundedCornerShape(6.dp)
-                                )
-                                .align(Alignment.BottomEnd)
+                    // Modern Avatar Background
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(
+                                brush = Brush.radialGradient(
+                                    colors = listOf(
+                                        SkyBlue.copy(alpha = 0.1f),
+                                        SkyBlue.copy(alpha = 0.3f)
+                                    ),
+                                    center = Offset(24.dp.value, 18.dp.value),
+                                    radius = 30f
+                                ),
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = name,
+                            tint = SkyBlue,
+                            modifier = Modifier.size(28.dp)
                         )
                     }
+
                 }
                 
                 Spacer(modifier = Modifier.width(12.dp))
-                
+
                 Column {
                     Text(
                         text = name,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF92400E)
+                        color = TextPrimary
                     )
-                    
-                    Text(
-                        text = if (isOnline) "Çevrimiçi" else "Çevrimdışı",
-                        fontSize = 12.sp,
-                        color = if (isOnline) FreshGreen else TextSecondary
-                    )
+
+
                 }
             }
             
@@ -239,13 +236,13 @@ private fun FriendCard(
                     text = formatSteps(todaySteps),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF92400E)
+                    color = TextPrimary
                 )
                 
                 Text(
                     text = "adım",
                     fontSize = 12.sp,
-                    color = Color(0xFF78716C)
+                    color = TextSecondary
                 )
             }
         }
@@ -253,8 +250,6 @@ private fun FriendCard(
 }
 
 private fun formatSteps(steps: Int): String {
-    return when {
-        steps >= 1000 -> "${steps / 1000}.${(steps % 1000) / 100}k"
-        else -> steps.toString()
-    }
+    return DecimalFormat("#,###")
+        .format(steps)
 }
